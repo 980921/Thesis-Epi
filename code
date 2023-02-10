@@ -1,0 +1,114 @@
+d1<-read.csv("C:/Users/Ellya/OneDrive/desktop/Thesis/data/protein array new/Std_control_matrix_M.csv")
+rank_data<-read.csv("C:/Users/Ellya/OneDrive/desktop/Thesis/data/protein array data/Bar_ranks_with_slide",sep=',')
+
+rank.col.sd = c()
+for(i in 2:(ncol(rank_data)-3)){
+  if(any(is.na(rank_data[,i]))){
+    print(i)
+  }
+  rank.col.sd = c(rank.col.sd,sd(rank_data[,i],na.rm=T))
+}
+
+col.index = 2:(ncol(rank_data)-3)
+top.10.value = head(sort(rank.col.sd,decreasing=T),15)
+col.corr = col.index[ which(rank.col.sd %in% (top.10.value)) ]
+col.corr = col.index[ which(rank.col.sd >= min(top.10.value)) ]
+rank_top_10_data  = rank_data[,col.corr]
+
+intersect( colnames(rank_data), colnames(sub_location) )
+
+rank_loc_merge = sub_location %>%
+  merge(by=c("Slide", "Pad"), rank_data,all.x=T,all.y = F)
+
+#a = c(2,1,3,4,8,5,6)
+#head(sort(a,decreasing=T),5)
+
+
+
+d1.row.sd = c()
+for(i in 1:(nrow(d1))){
+  if(any(is.na(d1[i,]))){
+    print(i)
+  }
+  d1.row.sd = c(d1.row.sd,sd(d1[i,2:(ncol(d1)-2)],na.rm=T))
+}
+
+d1.col.sd = c()
+for(i in 2:(ncol(d1)-2)){
+  if(any(is.na(d1[,i]))){
+    print(i)
+  }
+  d1.col.sd = c(d1.col.sd,sd(d1[,i],na.rm=T))
+}
+col.corr2 = col.index[ which(d1.col.sd >= min(top.10.value)) ]
+rank_top_10_data2  = rank_data[,col.corr2]
+
+
+#top 15 protein rank
+col.index = 2:(ncol(rank_data)-3)
+rank.col.sd = sapply(rank_data[,col.index],sd)
+top.15.value = head(sort(rank.col.sd,decreasing=T),15)
+col.corr = col.index[ which(rank.col.sd %in% (top.15.value)) ]
+rank_top_15_data = rank_data[,col.corr]
+colnames(rank_top_15_data)
+print(top.15.value)
+
+
+d1.col.sd = c()
+for(i in 2:(ncol(d1)-2)){
+  if(any(is.na(d1[,i]))){
+    print(i)
+  }
+  d1.col.sd = c(d1.col.sd,sd(d1[,i],na.rm=T))
+}
+top.10.value2 = head(sort(d1.col.sd,decreasing=T),10)
+col.corr2 = col.index[ which(d1.col.sd >= min(top.10.value2)) ]
+rank_top_10_data3  = d1[,col.corr2]
+colnames(rank_top_10_data3)
+print(top.10.value2)
+```
+```{r}
+#top FI protein of interest
+d1.col.sd = c()
+for(i in 2:(ncol(d1)-2)){
+  if(any(is.na(d1[,i]))){
+    print(i)
+  }
+  d1.col.sd = c(d1.col.sd,sd(d1[,i],na.rm=T))
+}
+top.10.value1 = head(sort(d1.col.sd,decreasing=T),10)
+col.corr2 = col.index[ which(d1.col.sd %in% (top.10.value1)) ]
+rank_top_10_data2  = d1[,col.corr2]
+colnames2 = colnames(rank_top_10_data2)
+
+# Create data frame with protein names and standard deviation
+df_fluo = data.frame(Protein = colnames2, SD = top.10.value1)
+
+# Sort data frame by SD in descending order
+df_fluo = df_fluo[order(-df_fluo$SD),]
+
+# Print top 10 rows
+head(df_fluo,10)
+column_std_dev = sd(d1[,1])
+
+#top FI protein of interest
+d1.col.sd = c()
+for(i in 2:(ncol(d1)-2)){
+  if(any(is.na(d1[,i]))){
+    print(i)
+  }
+  d1.col.sd = c(d1.col.sd,sd(d1[,i],na.rm=T))
+}
+top.10.value4 = head(sort(d1.col.sd,decreasing=T),15)
+col.corr2 = col.index[ which(d1.col.sd %in% (top.10.value4)) ]
+rank_top_10_data3  = d1[,col.corr2]
+colnames2 = colnames(rank_top_10_data3)
+
+# Create data frame with protein names and standard deviation
+df_fluo1 = data.frame(Protein = colnames2, SD = top.10.value4)
+
+# Sort data frame by SD in descending order
+df_fluo1 = df_fluo1[order(-df_fluo1$SD),]
+
+# Print top 10 rows
+head(df_fluo1,15)
